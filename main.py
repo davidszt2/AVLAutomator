@@ -1,6 +1,10 @@
+import os
 from COMPONENTS import Header, Wing, Horizontal, Vertical
+import CASE
+import AVL
 
 filename = 'test_geom.avl'
+casefile = 'test_case.case'
 
 """INPUT AND DERIVED PARAMETERS"""
 # Geometry Input
@@ -48,3 +52,7 @@ Horizontal.createHorizontal(filename, horizontalSpan, horizontalSref, horizontal
 
 # Vertical
 Vertical.createVertical(filename, verticalSpan, verticalSref, verticalTaper, 0, 0.7*wingSpan)
+
+"""CASE FILE"""
+caseName = 'test_geom_case'
+CASE.trimmedCase(casefile, caseName, 35, 6)
