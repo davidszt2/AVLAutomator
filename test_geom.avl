@@ -87,3 +87,37 @@ NACA
 #Cname   Cgain    Xhinge   HingeVec   SgnDup
 CONTROL
 Elevator 1.0 0.7 0.0 1.0  0.0 1
+#==============================================================
+SURFACE
+Vertical
+#Nchordwise       Cspace   Nspanwise   Sspace
+12                1.0      10          1.0
+
+YDUP
+0
+ANGLE
+0
+TRANSLATE
+1.067  0   0
+#-------------------------------------------------------
+SECTION | Vertical Root
+#Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
+0        0        0         0.236      0      10         1
+
+NACA
+0012
+
+#Cname   Cgain    Xhinge   HingeVec   SgnDup
+CONTROL
+Rudder 1.0 0.7 0.0 0.0  1.0 1
+#-------------------------------------------------------
+SECTION | Vertical Tip
+#Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
+0.094        0        0.33         0.141      0      10         1
+
+NACA
+0012
+
+#Cname   Cgain    Xhinge   HingeVec   SgnDup
+CONTROL
+Rudder 1.0 0.7 0.0 0.0  1.0 1

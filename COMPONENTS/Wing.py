@@ -30,6 +30,7 @@ def writeWingSection(filename, sectionName, xle, yle, zle, chord, ainc, airfoil,
 
 
 def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=True, flaps=True, ailFrac=0.3, flapFrac=0.3):
+    # TODO: FIX WASHOUT
     # filename: name of the file
     # span: wing span in meters
     # Sref: wing reference area in m^2
@@ -55,9 +56,11 @@ def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=
     ## XLE AND YLE DISPLACEMENTS
     xLEmid = Calignment*(Croot - Cmid)
     yLEmid = 0.5*(span/2)
+    zLEmid = 0
 
     xLEtip = Calignment*(Croot - Ctip)
     yLEtip = span/2
+    zLEtip = 0
 
     ## WRITE TO FILE
     # Wing Surface
@@ -72,17 +75,17 @@ def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=
 
     # Wing Mid
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeWingSection(filename, 'Wing Mid', round(xLEmid,3), round(yLEmid,3), 0, round(Cmid,3), 0, '0012', NACA=True)
+    writeWingSection(filename, 'Wing Mid', round(xLEmid,3), round(yLEmid,3), round(zLEmid,3), round(Cmid,3), 0, '0012', NACA=True)
     if flaps:
         #                       filename   name    chordfrac      hinge vector     sgndup
-        ControlSurface.writeControlSurface(filename, 'Flaps', flapFrac, round(hingeX,3), round(hingeY,3), hingeZ, 1)
+        ControlSurface.writeControlSurface(filename, 'Flaps', flapFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), 1)
     if ail:
         #                       filename   name    chordfrac      hinge vector     sgndup
-        ControlSurface.writeControlSurface(filename, 'Ailerons', ailFrac, round(hingeX,3), round(hingeY,3), hingeZ, -1)
+        ControlSurface.writeControlSurface(filename, 'Ailerons', ailFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), -1)
 
     # Wing Tip
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeWingSection(filename, 'Wing Tip', round(xLEtip,3), round(yLEtip,3), 0, round(Ctip,3), 0, '0012', NACA=True)
+    writeWingSection(filename, 'Wing Tip', round(xLEtip,3), round(yLEtip,3), round(zLEtip,3), round(Ctip,3), 0, '0012', NACA=True)
     if ail:
         #                       filename   name    chordfrac      hinge vector     sgndup
-        ControlSurface.writeControlSurface(filename, 'Ailerons', ailFrac, round(hingeX,3), round(hingeY,3), hingeZ, -1)
+        ControlSurface.writeControlSurface(filename, 'Ailerons', ailFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), -1)

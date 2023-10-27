@@ -1,4 +1,4 @@
-from COMPONENTS import Header, Wing, Horizontal
+from COMPONENTS import Header, Wing, Horizontal, Vertical
 
 filename = 'test_geom.avl'
 
@@ -12,6 +12,10 @@ horizontalSpan = 0.752
 horizontalAR = 3
 horizontalTaper = 1
 
+verticalSpan = 0.33
+verticalAR = 1.75
+verticalTaper = 0.6
+
 # Derived Values
 wingSref = wingSpan**2 / wingAR
 wingCroot = 2*wingSref/(wingSpan*(1+wingTaper))
@@ -20,6 +24,10 @@ wingCref = (2/3) * wingCroot * (1+wingTaper+wingTaper**2) / (1+wingTaper)
 horizontalSref = horizontalSpan**2 / horizontalAR
 horizontalCroot = 2*horizontalSref/(horizontalSpan*(1+horizontalTaper))
 horizontalCref = (2/3) * horizontalCroot * (1+horizontalTaper+horizontalTaper**2) / (1+horizontalTaper)
+
+verticalSref = verticalSpan**2 / verticalAR
+verticalCroot = 2*verticalSref/(verticalSpan*(1+verticalTaper))
+verticalCref = (2/3) * verticalCroot * (1+verticalTaper+verticalTaper**2) / (1+verticalTaper)
 
 # Miscelaneous Input
 Xcg = 0.25*wingCref
@@ -37,3 +45,6 @@ Wing.createWing(filename, wingSpan, wingSref, wingTaper, flaps=True, ail=True)
 
 # Horizontal
 Horizontal.createHorizontal(filename, horizontalSpan, horizontalSref, horizontalTaper, 0, 0.7*wingSpan)
+
+# Vertical
+Vertical.createVertical(filename, verticalSpan, verticalSref, verticalTaper, 0, 0.7*wingSpan)
