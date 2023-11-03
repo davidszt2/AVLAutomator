@@ -3,7 +3,7 @@ from COMPONENTS import Header, Wing, Horizontal, Vertical
 import CASE
 import AVL
 
-filename = 'test_geom.avl'
+geomfile = 'test_geom.avl'
 casefile = 'test_case.case'
 
 """INPUT AND DERIVED PARAMETERS"""
@@ -34,25 +34,37 @@ verticalCroot = 2*verticalSref/(verticalSpan*(1+verticalTaper))
 verticalCref = (2/3) * verticalCroot * (1+verticalTaper+verticalTaper**2) / (1+verticalTaper)
 
 # Miscelaneous Input
-Xcg = 0.25*wingCref
+Xcg = 0.2*wingCref
 Mach = 0.03
 geometryName = 'test_geom'
 groundEffectHeight = 0
 CD0 = 0.027
 
 """GEOMETRY FILE"""
+# Clear
+open(geomfile, 'w').close()
+
 # Header
-Header.createHeader(filename, geometryName, Mach, wingSref, wingCref, wingSpan, Xcg, CD0)
+Header.createHeader(geomfile, geometryName, Mach, wingSref, wingCref, wingSpan, Xcg, CD0)
 
 # Wing
-Wing.createWing(filename, wingSpan, wingSref, wingTaper, flaps=True, ail=True)
+Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, flaps=False, ail=False)
 
 # Horizontal
-Horizontal.createHorizontal(filename, horizontalSpan, horizontalSref, horizontalTaper, 0, 0.7*wingSpan)
+Horizontal.createHorizontal(geomfile, horizontalSpan, horizontalSref, horizontalTaper, 0, 0.7 * wingSpan)
 
 # Vertical
-Vertical.createVertical(filename, verticalSpan, verticalSref, verticalTaper, 0, 0.7*wingSpan)
+Vertical.createVertical(geomfile, verticalSpan, verticalSref, verticalTaper, 0, 0.7 * wingSpan, rudder=False)
 
 """CASE FILE"""
+# Clear
+open(casefile, 'w').close()
+
 caseName = 'test_geom_case'
-CASE.trimmedCase(casefile, caseName, 35, 6)
+CASE.createTrimmedCase(casefile, caseName, 35, 6)
+
+"""RUN PROGRAM"""
+geomPath = os.path.abspath(geomfile)
+casePath = os.path.abspath(casefile)
+
+# AVL.getStabilityDerivatives(geomPath, casePath, 'test', loud=False)

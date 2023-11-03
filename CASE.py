@@ -5,8 +5,9 @@ Case file creation functions for AVL
 @Date:      October, 2023
 """
 
-def trimmedCase(filename, casename, velocity, mass, flaps=True, ailerons=True, elevator=True, rudder=True, rho=1.225, Ixx=0.1, Iyy=0.1, Izz=0.04):
+def createTrimmedCase(filename, casename, velocity, mass, flaps=True, ailerons=True, elevator=True, rudder=True, rho=1.225, Ixx=0.1, Iyy=0.1, Izz=0.04):
     with open(filename, 'a') as f:
+        f.truncate(0)
         f.write(f"---------------------------------------------\nRun case  1:  {casename}\n")
         f.write("alpha        ->  CL          =   0.00000\n")
         f.write("beta         ->  beta        =   0.00000\n")

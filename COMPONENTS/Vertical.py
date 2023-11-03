@@ -28,7 +28,7 @@ def writeVerticalSection(filename, sectionName, xle, yle, zle, chord, ainc, airf
         f.write(f"NACA\n{airfoil}\n\n") if NACA else f.write(f"AFIL 0.0 1.0\n{airfoil}\n\n")
 
 
-def createVertical(filename, span, Sref, taper, incidence, momentArm, Calignment = 1, rudderFrac=0.3):
+def createVertical(filename, span, Sref, taper, incidence, momentArm, Calignment = 1, rudder=True, rudderFrac=0.3):
     # filename: name of the file
     # span: vertical span in meters
     # Sref: vertical reference area in m^2
@@ -60,11 +60,13 @@ def createVertical(filename, span, Sref, taper, incidence, momentArm, Calignment
     # Horizontal Root
     #               filename   name          x  y  z    c            ainc foil     naca
     writeVerticalSection(filename, 'Vertical Root', 0, 0, 0, round(Croot, 3), 0, '0012', NACA=True)
-    ControlSurface.writeControlSurface(filename, "Rudder", rudderFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), 1)
+    if rudder:
+        ControlSurface.writeControlSurface(filename, "Rudder", rudderFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), 1)
 
     # Horizontal Tip
     #               filename   name    x  y  z    c   ainc foil     naca
     writeVerticalSection(filename, 'Vertical Tip', round(xLEtip,3), round(yLEtip,3), round(zLEtip,3), round(Ctip, 3), 0, '0012', NACA=True)
-    ControlSurface.writeControlSurface(filename, "Rudder", rudderFrac, round(hingeX, 3), round(hingeY, 3),
+    if rudder:
+        ControlSurface.writeControlSurface(filename, "Rudder", rudderFrac, round(hingeX, 3), round(hingeY, 3),
                                        round(hingeZ, 3), 1)
 
