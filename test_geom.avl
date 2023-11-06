@@ -22,24 +22,40 @@ SECTION | Wing Root
 #Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
 0        0        0         0.472      0      50         1
 
-NACA
-0012
+AFIL 0.0 1.0
+sm701.dat
 
 #-------------------------------------------------------
 SECTION | Wing Mid
 #Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
 0.018        0.381        0         0.401      0      50         1
 
-NACA
-0012
+AFIL 0.0 1.0
+sm701.dat
 
 #-------------------------------------------------------
 SECTION | Wing Tip
 #Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
-0.035        0.762        0         0.33      0      50         1
+0.035        0.673        0         0.33      0      50         1
 
-NACA
-0012
+AFIL 0.0 1.0
+sm701.dat
+
+# ==============================================================
+COMPONENT
+7
+YDUP
+0
+ANGLE
+0
+# -------------------------------------------------------
+SECTION | Winglet Lower
+# Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
+0.066   0.723  0.03    0.33  4   10  1
+# -------------------------------------------------------
+SECTION | Winglet Upper
+# Xle     Yle      Zle      chord    Ainc    Nspan    Sspace
+0.08  0.762   0.147    0.198   0   10  1
 
 #==============================================================
 SURFACE
@@ -102,4 +118,3 @@ SECTION | Vertical Tip
 
 NACA
 0012
-

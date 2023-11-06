@@ -48,7 +48,7 @@ open(geomfile, 'w').close()
 Header.createHeader(geomfile, geometryName, Mach, wingSref, wingCref, wingSpan, Xcg, CD0)
 
 # Wing
-Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, flaps=False, ail=False)
+Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, 'sm701.dat', NACA=False,flaps=False, ail=False, winglet=True)
 
 # Horizontal
 Horizontal.createHorizontal(geomfile, horizontalSpan, horizontalSref, horizontalTaper, 0, 0.7 * wingSpan)

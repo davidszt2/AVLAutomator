@@ -6,7 +6,7 @@ Wing creation function for AVL geometry file
 """
 
 import math
-from COMPONENTS import ControlSurface
+from COMPONENTS import ControlSurface, Winglets
 
 
 def writeWingSurface(filename, incidence):
@@ -29,7 +29,7 @@ def writeWingSection(filename, sectionName, xle, yle, zle, chord, ainc, airfoil,
         f.write(f"NACA\n{airfoil}\n\n") if NACA else f.write(f"AFIL 0.0 1.0\n{airfoil}\n\n")
 
 
-def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=True, flaps=True, ailFrac=0.3, flapFrac=0.3):
+def createWing(filename, span, Sref, taper, airfoil, NACA=False, incidence=0, Calignment = 0.25, ail=True, flaps=True, ailFrac=0.3, flapFrac=0.3, winglet=False, wingletSemiSpanFrac=0.2, wingletTaper=0.6, wingletVerticalAngle=15):
     # TODO: FIX WASHOUT
     # filename: name of the file
     # span: wing span in meters
@@ -59,8 +59,23 @@ def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=
     zLEmid = 0
 
     xLEtip = Calignment*(Croot - Ctip)
-    yLEtip = span/2
+    yLEtip = span/2 if not winglet else span/2*(1 - wingletSemiSpanFrac*math.sin(math.radians(wingletVerticalAngle))) - 0.05
     zLEtip = 0
+
+    ##WINGLETS
+    wingletCroot = Ctip
+    wingletCtip = wingletCroot*wingletTaper
+
+    wingletXLEroot = 0
+    wingletYLEroot = yLEtip + 0.05
+    wingletZLEroot = 0.03
+
+    wingletXLEtip = (wingletCroot-wingletCtip)/2
+    wingletYLEtip = span/2
+    wingletZLEtip = (span/2)*wingletSemiSpanFrac*math.cos(math.radians(wingletVerticalAngle))
+
+    wingletAroot = 2
+    wingletAtip = 1
 
     ## WRITE TO FILE
     # Wing Surface
@@ -68,14 +83,14 @@ def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=
 
     # Wing Root
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeWingSection(filename, 'Wing Root', 0, 0, 0, round(Croot,3), 0, '0012', NACA=True)
+    writeWingSection(filename, 'Wing Root', 0, 0, 0, round(Croot,3), 0, airfoil, NACA=NACA)
     if flaps:
     #                       filename   name    chordfrac      hinge vector     sgndup
         ControlSurface.writeControlSurface(filename, 'Flaps', flapFrac, round(hingeX,3), round(hingeY,3), hingeZ, 1)
 
     # Wing Mid
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeWingSection(filename, 'Wing Mid', round(xLEmid,3), round(yLEmid,3), round(zLEmid,3), round(Cmid,3), 0, '0012', NACA=True)
+    writeWingSection(filename, 'Wing Mid', round(xLEmid,3), round(yLEmid,3), round(zLEmid,3), round(Cmid,3), 0, airfoil, NACA=NACA)
     if flaps:
         #                       filename   name    chordfrac      hinge vector     sgndup
         ControlSurface.writeControlSurface(filename, 'Flaps', flapFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), 1)
@@ -85,7 +100,9 @@ def createWing(filename, span, Sref, taper, incidence=0, Calignment = 0.25, ail=
 
     # Wing Tip
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeWingSection(filename, 'Wing Tip', round(xLEtip,3), round(yLEtip,3), round(zLEtip,3), round(Ctip,3), 0, '0012', NACA=True)
+    writeWingSection(filename, 'Wing Tip', round(xLEtip,3), round(yLEtip,3), round(zLEtip,3), round(Ctip,3), 0, airfoil, NACA=NACA)
     if ail:
         #                       filename   name    chordfrac      hinge vector     sgndup
         ControlSurface.writeControlSurface(filename, 'Ailerons', ailFrac, round(hingeX,3), round(hingeY,3), round(hingeZ,3), -1)
+    if winglet:
+        Winglets.writeWinglet(filename, round(wingletXLEroot, 3), round(wingletYLEroot, 3), round(wingletZLEroot, 3), round(wingletCroot, 3), wingletAroot, round(wingletXLEtip, 3), round(wingletYLEtip, 3), round(wingletZLEtip, 3), round(wingletCtip, 3), wingletAtip)
