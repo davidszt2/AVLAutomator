@@ -11,8 +11,20 @@ import os
 avlGeom = 'test_geom.avl'
 avlCase = 'test_case.case'
 
-# Function to create the AVL command file
-def steadyLevelRoutine(geom, case, stOut='stOut.txt', filename='commands.run'):
+
+class OutputAVL:
+    def __init__(self, alphaTrim, CLtot, CDtot, e, Elevator, Flaps, Ailerons, Rudder):
+        self.alphaTrim = alphaTrim
+        self.CLtot = CLtot
+        self.CDtot = CDtot
+        self.e = e
+        self.Elevator = Elevator
+        self.Flaps = Flaps
+        self.Ailerons = Ailerons
+        self.Rudder = Rudder
+
+
+def steadyLevelCommands(geom, case, stOut='stOut.txt', filename='commands.run'):
     routine = f"""\
 LOAD {geom}
 CASE {case}
@@ -81,25 +93,39 @@ def parseOutput(stOut='stOut.txt'):
 
     return alpha, CLtot, CDtot, e, Elevator, Flaps, Ailerons, Rudder
 
-steadyLevelRoutine(avlGeom, avlCase)
 
-# Run AVL
-runAvl()
+def steadyLevelRoutine(avlGeom, avlCase):
+    # Creates command file
+    steadyLevelCommands(avlGeom, avlCase)
 
-# Parse the stability derivatives output
-alpha, CLtot, CDtot, e, Elevator, Flaps, Ailerons, Rudder = parseOutput()
+    # Runs AVL with command file created
+    runAvl()
 
-# Output the results
-print(f"Alpha: {alpha}")
-print(f"CLtot: {CLtot}")
-print(f"CDtot: {CDtot}")
-print(f"Oswald Efficiency (e): {e}")
-print(f"Elevator: {Elevator}") if Elevator else None
-print(f"Flaps: {Flaps}") if Flaps else None
-print(f"Ailerons: {Ailerons}") if Ailerons else None
-print(f"Rudder: {Rudder}") if Rudder else None
+    # Parses ST output
+    alpha, CLtot, CDtot, e, Elevator, Flaps, Ailerons, Rudder = parseOutput()
 
+    # Delete the stability derivatives output file
+    os.remove('stOut.txt')
+    os.remove('commands.run')
 
-# Delete the stability derivatives output file
-os.remove('stOut.txt')
-os.remove('commands.run')
+    # Output the results
+    print(f"Alpha: {alpha}")
+    print(f"CLtot: {CLtot}")
+    print(f"CDtot: {CDtot}")
+    print(f"Oswald Efficiency (e): {e}")
+    print(f"Elevator: {Elevator}") if Elevator else None
+    print(f"Flaps: {Flaps}") if Flaps else None
+    print(f"Ailerons: {Ailerons}") if Ailerons else None
+    print(f"Rudder: {Rudder}") if Rudder else None
+
+    polar = OutputAVL(
+        alphaTrim=alpha,
+        CLtot=CLtot,
+        CDtot=CDtot,
+        e=e,
+        Elevator=Elevator,
+        Flaps=Flaps,
+        Ailerons=Ailerons,
+        Rudder=Rudder)
+
+    return polar

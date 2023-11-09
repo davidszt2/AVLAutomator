@@ -67,4 +67,4 @@ CASE.createTrimmedCase(casefile, caseName, 35, 6)
 geomPath = os.path.abspath(geomfile)
 casePath = os.path.abspath(casefile)
 
-# AVL.getStabilityDerivatives(geomPath, casePath, 'test', loud=False)
+AVL.steadyLevelRoutine(geomPath, casePath)
