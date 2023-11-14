@@ -34,6 +34,8 @@ C1
 x
 st
 {stOut}
+t
+h
 
 quit
 """

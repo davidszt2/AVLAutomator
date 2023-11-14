@@ -63,6 +63,6 @@ def createHorizontal(filename, span, Sref, taper, incidence, momentArm, Calignme
 
     # Horizontal Tip
     #               filename   name    x  y  z    c   ainc foil     naca
-    writeHorizontalSection(filename, 'Horizontal Tip', xLEtip, yLEtip, 0, round(Croot, 3), 0, '0012', NACA=True)
+    writeHorizontalSection(filename, 'Horizontal Tip', round(xLEtip,3), round(yLEtip,3), 0, round(Ctip, 3), 0, '0012', NACA=True)
     ControlSurface.writeControlSurface(filename, "Elevator", elevatorFrac, round(hingeX, 3), round(hingeY, 3),
                                        round(hingeZ, 3), 1)
