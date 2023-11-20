@@ -4,13 +4,13 @@ from COMPONENTS import Header, Wing, Horizontal, Vertical
 import CASE
 import AVL
 from PIL import Image
+import pandas as pd
 
 geomfile = 'test_geom.avl'
 casefile = 'test_case.case'
 
 """TAPER RATIO TRADE EXAMPLE"""
-# wingTaperArr = [1, .9, .8, .7, .6, .5, .4]
-# # wingTaperArr = [1, .9]
+# wingTaperArr = [.7, .65, .6, .55, .5, .45, .4]
 # tradeDict = {}
 #
 # for wingTaper in wingTaperArr:
@@ -54,7 +54,7 @@ casefile = 'test_case.case'
 #     Header.createHeader(geomfile, geometryName, Mach, wingSref, wingCref, wingSpan, Xcg, CD0)
 #
 #     # Wing
-#     Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, 'sm701.dat', NACA=False, flaps=False, ail=False, winglet=False)
+#     Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, '1412', NACA=True, flaps=False, ail=False, winglet=False)
 #
 #     # Horizontal
 #     Horizontal.createHorizontal(geomfile, horizontalSpan, horizontalSref, horizontalTaper, 0, 0.7 * wingSpan)
@@ -83,18 +83,22 @@ casefile = 'test_case.case'
 #     oswaldArr.append(tradeVal[0].e)
 #     wingCrootArr.append(tradeVal[1])
 #
+# df = pd.DataFrame({'Taper Ratio': wingTaperArr, 'Oswald Efficiency': oswaldArr, 'Wing Root Chord [m]': wingCrootArr})
+# df.to_excel('Taper Trade NACA 1412.xlsx', sheet_name='sheet1', index=False)
+#
 # fig, ax1 = plt.subplots()
 # color = 'b'
 # ax1.set_xlabel('Wing Taper Ratio [-]')
 # ax1.set_ylabel('Oswald Efficiency [-]', color=color)
-# ax1.plot(wingTaperArr, oswaldArr, color=color)
+# ax1.plot(wingTaperArr, oswaldArr, color=color, marker='.')
 # ax1.tick_params(axis='y', labelcolor=color)
+# ax1.invert_xaxis()
 #
 # ax2 = ax1.twinx()
 #
 # color = 'tab:orange'
 # ax2.set_ylabel('Wing Root Chord [m]', color=color)
-# ax2.plot(wingTaperArr, wingCrootArr, color=color)
+# ax2.plot(wingTaperArr, wingCrootArr, color=color, marker='.')
 # ax2.tick_params(axis='y', labelcolor=color)
 #
 # fig.tight_layout()
@@ -105,6 +109,7 @@ casefile = 'test_case.case'
 wingSpan = 1.524
 wingAR = 3.8
 wingTaper = 0.7
+wingIncidence = 0
 
 horizontalSpan = 0.752
 horizontalAR = 3
@@ -146,7 +151,7 @@ open(geomfile, 'w').close()
 Header.createHeader(geomfile, geometryName, Mach, wingSref, wingCref, wingSpan, Xcg, CD0)
 
 # Wing
-Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, 'sm701.dat', NACA=False, flaps=False, ail=False, winglet=False)
+Wing.createWing(geomfile, wingSpan, wingSref, wingTaper, 'sm701.dat', NACA=False, incidence=wingIncidence, flaps=False, ail=False, winglet=False)
 
 # Horizontal
 Horizontal.createHorizontal(geomfile, horizontalSpan, horizontalSref, horizontalTaper, horizontalIncidence, tailMomentArm)
@@ -159,11 +164,16 @@ Vertical.createVertical(geomfile, verticalSpan, verticalSref, verticalTaper, ver
 open(casefile, 'w').close()
 
 caseName = 'test_geom_case'
-CASE.createTrimmedCase(casefile, caseName, 35, 6)
+# CASE.createTrimmedCase(casefile, caseName, 35, 6)
+CASE.createAoACase(casefile, caseName, 35, 6, 10)
 
 """RUN PROGRAM"""
 geomPath = os.path.abspath(geomfile)
 casePath = os.path.abspath(casefile)
 
-polar = AVL.steadyLevelRoutine(geomPath, casePath)
-print(polar.__dict__)
+try:
+    # polar = AVL.steadyLevelRoutine(geomPath, casePath)
+    polar = AVL.customRoutine(geomPath, casePath)
+    print(polar.__dict__)
+except Exception as e:
+    print(e)

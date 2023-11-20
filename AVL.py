@@ -43,6 +43,23 @@ quit
         file.write(routine)
 
 
+def customCommands(geom, case, stOut='stOut.txt', filename='commands.run'):
+    routine = f"""\
+LOAD {geom}
+CASE {case}
+OPER
+x
+st
+{stOut}
+t
+h
+
+quit
+"""
+    with open(filename, 'w') as file:
+        file.write(routine)
+
+
 def runAvl(routine='commands.run', avlPath='avl'):
     avl_command = f"{avlPath} < {routine}"
     subprocess.run(avl_command, shell=True, stderr=subprocess.STDOUT)
@@ -99,6 +116,42 @@ def parseOutput(stOut='stOut.txt'):
 def steadyLevelRoutine(avlGeom, avlCase):
     # Creates command file
     steadyLevelCommands(avlGeom, avlCase)
+
+    # Runs AVL with command file created
+    runAvl()
+
+    # Parses ST output
+    alpha, CLtot, CDtot, e, Elevator, Flaps, Ailerons, Rudder = parseOutput()
+
+    # Delete the stability derivatives output file
+    os.remove('stOut.txt')
+    os.remove('commands.run')
+
+    # Output the results
+    print(f"Alpha: {alpha}")
+    print(f"CLtot: {CLtot}")
+    print(f"CDtot: {CDtot}")
+    print(f"Oswald Efficiency (e): {e}")
+    print(f"Elevator: {Elevator}") if Elevator else None
+    print(f"Flaps: {Flaps}") if Flaps else None
+    print(f"Ailerons: {Ailerons}") if Ailerons else None
+    print(f"Rudder: {Rudder}") if Rudder else None
+
+    polar = OutputAVL(
+        alphaTrim=alpha,
+        CLtot=CLtot,
+        CDtot=CDtot,
+        e=e,
+        Elevator=Elevator,
+        Flaps=Flaps,
+        Ailerons=Ailerons,
+        Rudder=Rudder)
+
+    return polar
+
+def customRoutine(avlGeom, avlCase):
+    # Creates command file
+    customCommands(avlGeom, avlCase)
 
     # Runs AVL with command file created
     runAvl()
