@@ -1,0 +1,18 @@
+---------------------------------------------
+Run case  1:  test_geom_case
+alpha        ->  alpha          =   10
+beta         ->  beta        =   0.00000
+Flaps        ->  Flaps       =   0.00000
+Rudder       ->  Rudder =   0.00000
+
+velocity  =  35               Lunit/Tunit
+density   =  1.225              Munit/Lunit^3
+grav.acc. =  9.81            Lunit/Tunit^2
+mass      =  6             Munit
+
+Ixx = 0.1      Munit-Lunit^2
+Ixy = 0      Munit-Lunit^2
+Izx = 0      Munit-Lunit^2
+Iyy = 0.1      Munit-Lunit^2
+Iyz = 0      Munit-Lunit^2
+Izz = 0.04      Munit-Lunit^2
